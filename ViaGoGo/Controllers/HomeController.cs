@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ViaGoGo.Actions;
 using ViaGoGo.Domain;
 
 namespace ViaGoGo.Controllers
@@ -11,6 +12,10 @@ namespace ViaGoGo.Controllers
     {
         private ITimeService TimeService;
 
+        public HomeController(){
+            //TimeService = new TimeService();
+        }
+
         public HomeController(ITimeService timeService)
         {
             this.TimeService = timeService;
@@ -18,8 +23,18 @@ namespace ViaGoGo.Controllers
 
         public ActionResult Index()
         {
-            
-            return View();
+            return new GetNextWorkingDayAction<ActionResult>(TimeService)
+            {
+                OnComplete = (model) => View(model)
+            }.Execute(DateTime.Today);
+        }
+
+        public ActionResult NextWorkingDay(DateTime? date)
+        {
+            return new GetNextWorkingDayAction<ActionResult>(TimeService)
+            {
+                OnComplete = (model) => View("Index",model)
+            }.Execute(date);
         }
 
         public ActionResult About()

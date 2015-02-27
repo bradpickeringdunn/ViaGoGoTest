@@ -2,19 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
+using ViaGoGo.Models.Response;
 
-namespace ViaGoGo.Models.Response
+namespace ViaGoGo.Models
 {
-    public class TimeServiceResponse
+    public class WorkingDayViewModel
     {
-        public TimeServiceResponse()
+        public WorkingDayViewModel()
         {
             Notifications = new NotificationCollection();
         }
 
-        public DateTime NextworkingDay{ get; set; }
         public NotificationCollection Notifications { get; set; }
+
+        public DateTime NextWorkingDay { get; set; }
+
+
     }
 }

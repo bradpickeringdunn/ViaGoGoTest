@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ViaGoGo.Domain;
+using ViaGoGo.Models;
 using ViaGoGo.Models.Response;
 
 namespace ViaGoGo.Actions
@@ -17,16 +18,31 @@ namespace ViaGoGo.Actions
             this.TimeService = timeService;
         }
 
-        public Func<TimeServiceResponse, T> OnSuccess{get;set;}
+        public Func<WorkingDayViewModel, T> OnComplete { get; set; }
 
-        public Func<T> OnFailed { get; set; }
+        public T Execute(DateTime? date)
+        {
+            var model = new WorkingDayViewModel();
 
-        public T Execute(DateTime today){
+            TimeServiceResponse result = new TimeServiceResponse();
 
-            var notifications = new NotificationCollection();
-            var nextWorkingDay = TimeService.ReturnNextWorkingDay(today);
+            if (!date.HasValue)
+            {
+                model.Notifications.Add(new Notification(Errors.IncorrectDate));
+            }
 
-            return nextWorkingDay.Notifications.HasErrors ? OnFailed() : OnSuccess(nextWorkingDay);
+            if (!model.Notifications.HasErrors)
+            {
+                result = TimeService.ReturnNextWorkingDay(date.Value);
+                model.Notifications = result.Notifications;
+            };
+
+            if (!model.Notifications.HasErrors)
+            {
+                model.NextWorkingDay = result.NextworkingDay;
+            }
+            
+            return OnComplete(model);
         }
     }
 }

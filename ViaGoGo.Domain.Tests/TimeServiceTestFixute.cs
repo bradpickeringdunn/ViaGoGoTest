@@ -15,6 +15,7 @@ namespace ViaGoGo.Domain.Tests
 
             var result = timeService.ReturnNextWorkingDay(workingDay);
 
+            Assert.IsTrue(result.NextworkingDay.Date == new DateTime(2015, 12, 27).Date);
         }
     }
 }
